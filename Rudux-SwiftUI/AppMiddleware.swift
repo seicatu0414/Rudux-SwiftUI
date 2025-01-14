@@ -93,7 +93,8 @@ func createAppMiddleware(diContainer: DIContainer) -> (Store, AppAction) -> Void
                     }
                 }
             }
-
+//        case .popSearchUserDetail(let userInfo):
+//            store.state.searchUser.last
         default:
             break
         }

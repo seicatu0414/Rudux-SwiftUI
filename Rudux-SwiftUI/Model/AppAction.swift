@@ -24,4 +24,5 @@ enum AppAction {
     case setFollowers([SearchUserFollower],Bool)
     case setFollowees([SearchUserFollowee],Bool)
     case setWebViewOpen(String)
+    case popSearchUser
 }

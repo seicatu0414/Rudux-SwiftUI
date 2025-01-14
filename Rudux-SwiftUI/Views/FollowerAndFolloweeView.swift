@@ -81,9 +81,9 @@ struct FollowerAndFolloweeView: View {
     
     private func fetchUsers() {
         if isOn {
-            store.dispatch(.follwers(store.state.searchUser!.id,false))
+            store.dispatch(.follwers(store.state.searchUser.last!.id,false))
         } else {
-            store.dispatch(.followees(store.state.searchUser!.id,false))
+            store.dispatch(.followees(store.state.searchUser.last!.id,false))
         }
     }
 }

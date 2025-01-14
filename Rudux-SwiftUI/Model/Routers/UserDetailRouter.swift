@@ -19,4 +19,7 @@ class UserDetailRouter {
     func pushToFolloweesDetail(user: [SearchUserFollowee]) {
         navigationState.navigationPath.append(user)
     }
+    func pop() {
+        navigationState.navigationPath.removeLast()
+    }
 }

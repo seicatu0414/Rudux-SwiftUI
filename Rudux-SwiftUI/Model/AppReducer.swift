@@ -18,7 +18,7 @@ func appReducer(state: inout AppState, action: AppAction) {
     case .searchUser(_):
         break
     case .setUser(let userInfo):
-        state.searchUser = userInfo
+        state.searchUser.append(userInfo)
     case .userItems(_):
         break
     case .setUserItems(let items):
@@ -33,5 +33,7 @@ func appReducer(state: inout AppState, action: AppAction) {
         state.followees = followees
     case .setWebViewOpen(let itemUrl):
         state.selectedItemUrl = itemUrl
+    case .popSearchUser:
+        state.searchUser.removeLast()
     }
 }

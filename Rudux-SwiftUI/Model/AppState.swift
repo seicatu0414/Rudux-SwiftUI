@@ -9,7 +9,7 @@ struct AppState {
     // SwiftData
     var lookedUsers: [LookedUser] = []
     // API
-    var searchUser: SearchUser?
+    var searchUser: [SearchUser] = []
     var items: [SearchUserItem] = []
     var followers: [SearchUserFollower] = []
     var followees: [SearchUserFollowee] = []
