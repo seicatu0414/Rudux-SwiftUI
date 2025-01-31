@@ -10,10 +10,8 @@ import SDWebImageSwiftUI
 struct UserDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var store: Store
-    @EnvironmentObject var navigationState: NavigationState
     @State private var userInfo: SearchUser?
     @State private var isModalPresented = false
-    
     init(userInfo: SearchUser) {
         _userInfo = State(initialValue: userInfo)
     }
@@ -78,16 +76,16 @@ struct UserDetailView: View {
                     Text("投稿数: \(store.state.searchUser.last?.itemsCount ?? 0)")
                     HStack {
                         Button(action: {
-                            store.dispatch(.followees(store.state.searchUser.last!.id, true))
+                            store.dispatch(.follwers(store.state.searchUser.last!.id, true))
                         }) {
-                            Text("following: \(store.state.searchUser.last?.followeesCount ?? 0)")
+                            Text("followers: \(store.state.searchUser.last?.followersCount ?? 0)")
                         }
                         .foregroundColor(.stringBlack)
                         
                         Button(action: {
-                            store.dispatch(.follwers(store.state.searchUser.last!.id, true))
+                            store.dispatch(.followees(store.state.searchUser.last!.id, false))
                         }) {
-                            Text("followers: \(store.state.searchUser.last?.followersCount ?? 0)")
+                            Text("followees: \(store.state.searchUser.last?.followeesCount ?? 0)")
                         }
                         .foregroundColor(.stringBlack)
                         

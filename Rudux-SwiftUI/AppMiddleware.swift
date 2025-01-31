@@ -10,20 +10,24 @@ import Foundation
 func createAppMiddleware(diContainer: DIContainer) -> (Store, AppAction) -> Void {
     return { store, action in
         switch action {
+        // 使ってない。＠Queryに変更
+        //（SearchUserViewのonApearだとsaveLookedUser後にSearchUserViewのonApearにあったloadLookedUsers
+        //  が走りStateのデータ更新、Stateのデータ変更をSearchUserViewが検知再レンダリング→SearchUserViewのonApearが走りと無限ループ）
         case .loadLookedUsers:
-            Task {
-                await MainActor.run {
-                    let modelContext = diContainer.sharedModelContainer.modelContainer.mainContext
-                    let swiftDataService = SwiftDataService(modelContext: modelContext)
-
-                    do {
-                        let lookedUsers = try swiftDataService.fetchLookedUsers()
-                        store.dispatch(.setLookedUsers(lookedUsers))
-                    } catch {
-                        print("Failed to fetch items: \(error)")
-                    }
-                }
-            }
+//            Task {
+//                await MainActor.run {
+//                    let modelContext = diContainer.sharedModelContainer.modelContainer.mainContext
+//                    let swiftDataService = SwiftDataService(modelContext: modelContext)
+//
+//                    do {
+//                        let lookedUsers = try swiftDataService.fetchLookedUsers()
+//                        store.dispatch(.setLookedUsers(lookedUsers))
+//                    } catch {
+//                        print("Failed to fetch items: \(error)")
+//                    }
+//                }
+//            }
+            break
         case .saveLookedUser(let userInfo):
             Task {
                 await MainActor.run {
@@ -52,7 +56,7 @@ func createAppMiddleware(diContainer: DIContainer) -> (Store, AppAction) -> Void
             // データが設定されたら遷移を実行
             Task {
                 await MainActor.run {
-                    diContainer.searchUserRouter.pushToUserDetail(user: userInfo)
+                    AppRouter.shared.navigateTo(.userDetail(userInfo: userInfo))
                 }
             }
         case.userItems(let userId):
@@ -62,18 +66,20 @@ func createAppMiddleware(diContainer: DIContainer) -> (Store, AppAction) -> Void
                     store.dispatch(.setUserItems(userItems))
                 }
             }
-        case.followees(let userId,let isPush):
+        case .followees(let userId, let isPush):
             Task {
                 let followeesInfo = try await APIService.sendFolloweesApi(userId: userId)
                 await MainActor.run {
+                    print("Before Dispatch")
                     store.dispatch(.setFollowees(followeesInfo, isPush))
+                    print("After Dispatch")
                 }
             }
-        case .setFollowees(let followeesInfo,let isPush):
-            if isPush {
+        case .setFollowees(_,let isPush):
+            if !isPush {
                 Task {
                     await MainActor.run {
-                        diContainer.userDetailRouter.pushToFolloweesDetail(user: followeesInfo)
+                        AppRouter.shared.navigateTo(.followerAndFollowee(FollowerOrFollowee: isPush))
                     }
                 }
             }
@@ -85,16 +91,14 @@ func createAppMiddleware(diContainer: DIContainer) -> (Store, AppAction) -> Void
                 }
 
             }
-        case .setFollowers(let followersInfo,let isPush):
+        case .setFollowers(_,let isPush):
             if isPush {
                 Task {
                     await MainActor.run {
-                        diContainer.userDetailRouter.pushToFollowersDetail(user: followersInfo)
+                        AppRouter.shared.navigateTo(.followerAndFollowee(FollowerOrFollowee: isPush))
                     }
                 }
             }
-//        case .popSearchUserDetail(let userInfo):
-//            store.state.searchUser.last
         default:
             break
         }

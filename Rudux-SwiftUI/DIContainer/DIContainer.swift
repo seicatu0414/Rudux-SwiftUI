@@ -7,15 +7,9 @@
 
 class DIContainer {
     let sharedModelContainer: SharedModelContainer
-    let searchUserRouter: SearchUserRouter
-    let userDetailRouter: UserDetailRouter
     init(
-        sharedModelContainer: SharedModelContainer,
-        navigationState: NavigationState
+        sharedModelContainer: SharedModelContainer
     ) {
         self.sharedModelContainer = sharedModelContainer
-        self.searchUserRouter = SearchUserRouter(navigationState: navigationState)
-        // 新しいルーターはここで追加
-        self.userDetailRouter = UserDetailRouter(navigationState: navigationState)
     }
 }

@@ -11,8 +11,9 @@ func appReducer(state: inout AppState, action: AppAction) {
     switch action {
     case .loadLookedUsers:
         break
-    case .setLookedUsers(let lookedUsers):
-        state.lookedUsers = lookedUsers
+    case .setLookedUsers(_):
+        break
+//        state.lookedUsers = lookedUsers
     case .saveLookedUser(_):
         break
     case .searchUser(_):

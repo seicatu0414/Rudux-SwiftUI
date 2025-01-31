@@ -8,16 +8,15 @@ import SwiftUI
 
 struct FollowerAndFolloweeView: View {
     @EnvironmentObject var store: Store
-    @EnvironmentObject var navigationState: NavigationState
     @State private var isOn: Bool = true // セグメント選択状態
-    init(followerAndFollowee:Bool){
-        _isOn = State(initialValue: followerAndFollowee)
+    init(followerOrFollowee:Bool){
+        _isOn = State(initialValue: followerOrFollowee)
     }
     
     var body: some View {
         VStack {
             follwerOrFolloweeSegment
-            MiddleListTitleView(title: isOn ? "Followee":"Follower")
+            MiddleListTitleView(title: isOn ? "Follower":"Followee")
             if isOn {
                 followerListView
             } else {
@@ -34,10 +33,10 @@ struct FollowerAndFolloweeView: View {
     private var follwerOrFolloweeSegment: some View {
         Picker("", selection: $isOn) {
             Text("Follower")
-                .tag(false)
+                .tag(true)
             
             Text("Followee")
-                .tag(true)
+                .tag(false)
         }
         .pickerStyle(SegmentedPickerStyle())
         .padding()

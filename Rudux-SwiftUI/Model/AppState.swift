@@ -6,8 +6,8 @@
 //
 
 struct AppState {
-    // SwiftData
-    var lookedUsers: [LookedUser] = []
+    // SwiftData(使ってない各画面"@Query"で評価)
+    //var lookedUsers: [LookedUser] = []
     // API
     var searchUser: [SearchUser] = []
     var items: [SearchUserItem] = []

@@ -6,39 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 // Presenterを疎結合にするためジェネリクス定義
 struct SearchUserView: View {
     @EnvironmentObject var store: Store
-    @EnvironmentObject var navigationState: NavigationState
+    @EnvironmentObject var appRouter: AppRouter
     @State private var searchText: String = ""
-    
+    @Query private var lookedUsers: [LookedUser]
     var body: some View {
-        NavigationStack(path: $navigationState.navigationPath) {
-            VStack {
-                searchBar
-                MiddleListTitleView(title: "過去閲覧したユーザー")
-                userList
-            }
-            .onAppear {
-                store.dispatch(.loadLookedUsers)
-            }
-            .navigationDestination(for: SearchUser.self) { user in
-                UserDetailView(userInfo: user)
-                    .environmentObject(store)
-                    .environmentObject(navigationState)
-            }
-            .navigationDestination(for:[SearchUserFollower].self) { data in
-                FollowerAndFolloweeView(followerAndFollowee: true)
-                    .environmentObject(store)
-                    .environmentObject(navigationState)
-            }
-            .navigationDestination(for:[SearchUserFollowee].self) { data in
-                FollowerAndFolloweeView(followerAndFollowee: false)
-                    .environmentObject(store)
-                    .environmentObject(navigationState)
-            }
+        VStack {
+            searchBar
+            MiddleListTitleView(title: "過去閲覧したユーザー")
+            userList
         }
-        
+//        RouterView形式に変えてから無限ループしてしまった
+//        .onAppear {
+//            store.dispatch(.loadLookedUsers)
+//        }
     }
     
     private var searchBar: some View {
@@ -67,7 +51,9 @@ struct SearchUserView: View {
     
     
     private var userList: some View {
-        List(store.state.lookedUsers, id: \.id) { user in
+        // Stateから呼び出すのをやめ＠Queryで評価。
+        // List(store.state.lookedUsers, id: \.id) { user in
+        List(lookedUsers, id: \.id) { user in
             Button(action: {
                 store.dispatch(.searchUser(user.id!))
             }) {
